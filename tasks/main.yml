@@ -1,0 +1,26 @@
+---
+- name: install mysql
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - mysql
+    - mysql-libs
+    - mysql-server
+
+- name: set start mysqld automaticaly
+  service:
+    name: mysqld
+    state: started
+    enabled: yes
+
+- name: install libselinux-python
+  yum:
+    name: libselinux-python
+
+#- name: confirm default setting (by mysqladmin ping) for idempotency
+#  shell: "mysqladmin --defaults-file={{ mysql_5_1_defaults_file}} ping | grep alive"
+#  ignore_errors: true
+#  register: init_flag
+#
+- include_tasks: set_up_mysql.yml
+#  when: init_flag.rc == 1
