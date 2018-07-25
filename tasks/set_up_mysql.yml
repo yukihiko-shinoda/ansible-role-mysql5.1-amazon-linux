@@ -56,7 +56,7 @@
     - localhost
   when: mysql_5_1_user_name is defined and mysql_5_1_user_password is defined
 
-- name: set ssl settings
+- name: set ssl settings and strict mode
   blockinfile:
     path: /etc/my.cnf
     insertafter: "\\[mysqld\\]$"
@@ -64,13 +64,6 @@
       ssl-ca = /etc/pki/CA/cacert.pem
       ssl-cert = /etc/pki/tls/certs/servercert.pem
       ssl-key = /etc/pki/tls/private/serverkey.pem
+      sql_mode = TRADITIONAL,NO_AUTO_VALUE_ON_ZERO,ONLY_FULL_GROUP_BY
     marker: "# {mark} ANSIBLE MANAGED BLOCK SSL SETTING"
-  notify: restart mysql
-
-- name: set strict mode
-  blockinfile:
-    path: /etc/my.cnf
-    block: |
-      sql_mode=TRADITIONAL,NO_AUTO_VALUE_ON_ZERO,ONLY_FULL_GROUP_BY
-    marker: "# {mark} ANSIBLE MANAGED BLOCK SQL MODE"
   notify: restart mysql
